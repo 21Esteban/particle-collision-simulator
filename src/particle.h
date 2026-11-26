@@ -5,11 +5,11 @@ class Particle
 {
 private:
     int id;
-    double x, y;      // center
+    double x, y;      // el centro
     double vx, vy;
     double mass;
     double radius;
-    bool alive;       // false when it got merged into another one
+    bool alive;       // false si ya se pego a otra
 
 public:
     Particle(int id, double x, double y, double vx, double vy, double mass, double radius);

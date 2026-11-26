@@ -11,8 +11,8 @@ using namespace std;
 class Simulation
 {
 private:
-    double width, height;    // the box goes from (0,0) to (width,height)
-    double restitution;      // e for the obstacles
+    double width, height;    // tamaño de la caja
+    double restitution;      // la e de los obstaculos
     double dt;
     double time;
     vector<Particle> particles;

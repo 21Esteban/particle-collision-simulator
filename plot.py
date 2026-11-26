@@ -1,5 +1,5 @@
-# reads simulation.txt and draws the trajectories and the collisions
-# usage: python plot.py
+# lee simulation.txt y grafica las trayectorias y los choques
+# se corre con: python plot.py
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
@@ -24,7 +24,7 @@ with open("simulation.txt") as f:
             paths[pid][1].append(float(parts[4]))
         elif parts[0] == "C":
             kind = parts[2]
-            # the position is right after the ids/side
+            # la posicion va despues del lado
             if kind == "wall":
                 x, y = float(parts[5]), float(parts[6])
             elif kind == "obstacle":

@@ -5,8 +5,8 @@ class Obstacle
 {
 private:
     int id;
-    double x, y;    // top left corner
-    double size;    // it's a square
+    double x, y;    // esquina de arriba a la izq
+    double size;    // es cuadrado
 
 public:
     Obstacle(int id, double x, double y, double size);

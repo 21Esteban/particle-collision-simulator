@@ -22,7 +22,7 @@ void Simulation::addObstacle(const Obstacle &o)
     obstacles.push_back(o);
 }
 
-// walls are perfectly elastic: just flip the speed that goes into the wall
+// con las paredes es elastico, solo se invierte la velocidad
 void Simulation::checkWalls(Particle &p)
 {
     double r = p.getRadius();
@@ -64,16 +64,16 @@ void Simulation::checkObstacles(Particle &p)
         double cy = p.getY();
         double r = p.getRadius();
 
-        // the point of the square that is closest to the center of the particle
+        // punto del cuadrado mas cercano a la particula
         double closestX = clamp(cx, o.getX(), o.getRight());
         double closestY = clamp(cy, o.getY(), o.getBottom());
         double dx = cx - closestX;
         double dy = cy - closestY;
 
-        if (dx * dx + dy * dy >= r * r) continue;   // not touching
-        if (dx == 0 && dy == 0) continue;           // center inside, shouldn't happen with a small dt
+        if (dx * dx + dy * dy >= r * r) continue;   // no lo toca
+        if (dx == 0 && dy == 0) continue;           // no deberia pasar con un dt pequeño
 
-        // which side did it hit? nx, ny is the normal of that side
+        // con que lado choco? (nx, ny) es la normal de ese lado
         string side;
         double nx = 0, ny = 0;
         if (dy == 0) {
@@ -85,24 +85,24 @@ void Simulation::checkObstacles(Particle &p)
             ny = (dy < 0) ? -1 : 1;
         }
         else {
-            // hit a corner, the normal points from the corner to the center
+            // pego en una esquina
             side = "corner";
             double distance = sqrt(dx * dx + dy * dy);
             nx = dx / distance;
             ny = dy / distance;
         }
 
-        // part of the speed that goes against the side
+        // la parte de la velocidad que va contra el lado
         double vPerp = p.getVx() * nx + p.getVy() * ny;
-        if (vPerp >= 0) continue;   // it's already going away
+        if (vPerp >= 0) continue;   // ya se esta alejando
 
-        // v_perp' = -e * v_perp and v_parallel stays the same
-        // that is the same as v' = v - (1 + e) * v_perp * n
+        // v_perp' = -e * v_perp y la paralela no cambia
+        // eso es lo mismo que v' = v - (1 + e) * v_perp * n
         double newVx = p.getVx() - (1 + restitution) * vPerp * nx;
         double newVy = p.getVy() - (1 + restitution) * vPerp * ny;
         p.setVelocity(newVx, newVy);
 
-        // take it out of the square so it doesn't get stuck
+        // la saco del cuadrado para que no se quede pegada
         p.setPosition(closestX + nx * r, closestY + ny * r);
 
         file << "C " << time << " obstacle " << p.getId() << " " << o.getId() << " "
@@ -111,7 +111,7 @@ void Simulation::checkObstacles(Particle &p)
     }
 }
 
-// two particles touching -> they become one (perfectly inelastic)
+// si dos se tocan se vuelven una sola
 void Simulation::checkParticles()
 {
     for (size_t i = 0; i < particles.size(); i++) {
@@ -148,7 +148,7 @@ bool Simulation::run(int steps, string fileName)
     file.open(fileName);
     if (!file.is_open()) return false;
 
-    // header with the box and the obstacles so we can draw them later
+    // primero la caja y los obstaculos para poder graficarlos
     file << "# box width height" << endl;
     file << "B " << width << " " << height << endl;
     file << "# obstacle id x y size" << endl;

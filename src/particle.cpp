@@ -13,27 +13,27 @@ Particle::Particle(int id, double x, double y, double vx, double vy, double mass
     alive = true;
 }
 
-// x = x0 + v*dt (no gravity, constant speed between collisions)
+// x = x0 + v*dt, sin gravedad
 void Particle::move(double dt)
 {
     x += vx * dt;
     y += vy * dt;
 }
 
-// perfectly inelastic: both become one body
+// choque inelastico: las dos quedan pegadas
 void Particle::mergeWith(Particle &other)
 {
     double totalMass = mass + other.mass;
 
-    // momentum is conserved: m1*v1 + m2*v2 = (m1+m2)*v'
+    // se conserva el momento: m1*v1 + m2*v2 = (m1+m2)*v'
     vx = (mass * vx + other.mass * other.vx) / totalMass;
     vy = (mass * vy + other.mass * other.vy) / totalMass;
 
-    // the new body goes to the center of mass
+    // queda en el centro de masa
     x = (mass * x + other.mass * other.x) / totalMass;
     y = (mass * y + other.mass * other.y) / totalMass;
 
-    // same total area -> r = sqrt(r1^2 + r2^2)
+    // misma area total, por eso r = sqrt(r1^2 + r2^2)
     radius = std::sqrt(radius * radius + other.radius * other.radius);
 
     mass = totalMass;
